@@ -1,0 +1,13 @@
+{
+  "name": "web-gateway",
+  "description": "Unified web gateway skill for Claude Code - intelligent tool routing, browser automation, and site experience accumulation",
+  "version": "2.5.3-webext.1",
+  "author": {
+    "name": "一泽 Eze"
+  },
+  "homepage": "https://github.com/eze-is/web-access",
+  "repository": "https://github.com/eze-is/web-access",
+  "license": "MIT",
+  "keywords": ["web", "gateway", "browser", "cdp", "automation", "search"],
+  "skills": "./"
+}

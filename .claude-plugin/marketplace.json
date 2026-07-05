@@ -1,0 +1,18 @@
+{
+  "name": "web-gateway",
+  "owner": {
+    "name": "一泽 Eze"
+  },
+  "metadata": {
+    "description": "Unified web gateway skill for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "web-gateway",
+      "description": "All web operations through one gateway: search, fetch, browser automation, site experience accumulation",
+      "source": "./",
+      "category": "productivity",
+      "tags": ["web", "gateway", "browser", "cdp", "automation", "search"]
+    }
+  ]
+}
