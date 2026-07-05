@@ -33,7 +33,7 @@ node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
 结果处理：
 - `webext: ready`：使用 `http://127.0.0.1:3457`，后续不需要 Chrome remote-debugging 授权弹窗。
 - `extension not connected` 或其他非 ready 结果：不要立刻切到 CDP。扩展服务 worker 或本地 daemon 重启后可能需要几秒重连；等待 10 秒后重跑 `check-webext.mjs`，最多重试两次，也就是总共检查三次。
-- 三次检查后仍非 ready：如果用户确认扩展尚未安装或未授权，再引导用户打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，Load unpacked 选择 `C:\Users\16684\.agents\skills\web-gateway\extension`，然后重跑 `check-webext.mjs`。安装并授权扩展后，后续正常使用无需再去浏览器点运行权限。
+- 三次检查后仍非 ready：如果用户确认扩展尚未安装或未授权，再引导用户打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，Load unpacked 选择本 skill 的 `extension/` 目录，然后重跑 `check-webext.mjs`。安装并授权扩展后，后续正常使用无需再去浏览器点运行权限。
 - 只有扩展后端三次检查失败、目标页无法 attach，或确实需要扩展后端未覆盖的底层 CDP 方法时，才进入 CDP 兜底：
 
 ```powershell

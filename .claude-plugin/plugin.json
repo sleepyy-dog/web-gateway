@@ -5,8 +5,8 @@
   "author": {
     "name": "一泽 Eze"
   },
-  "homepage": "https://github.com/eze-is/web-access",
-  "repository": "https://github.com/eze-is/web-access",
+  "homepage": "https://github.com/sleepyy-dog/web-gateway",
+  "repository": "https://github.com/sleepyy-dog/web-gateway",
   "license": "MIT",
   "keywords": ["web", "gateway", "browser", "cdp", "automation", "search"],
   "skills": "./"
