@@ -43,7 +43,11 @@ node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
 
 ### 4. 做一次任务验证
 
-让 Agent 执行一个需要网页读取或页面交互的任务，例如读取一个公开页面、打开需要登录态的页面，或测试一次简单的 DOM 读取。确认任务能按路由策略进入 OpenCLI、Agent 自带检索 / 网页读取，或浏览器自动化后端。
+提示词：
+
+```text
+请使用 Web-Gateway 完成两个验证任务：1. 找出我最近在浏览器里访问过的小红书帖子，告诉我标题、作者和链接，并切换点赞状态：未点赞就点赞，已点赞就取消点赞。2. 打开 https://www.selenium.dev/selenium/web/web-form.html，在 Text input 填写 Web-Gateway smoke test，在 Textarea 填写 hello from Web-Gateway，不要点击 Submit，最后告诉我两个字段当前的值。
+```
 
 ## 借鉴
 
