@@ -9,16 +9,16 @@ metadata:
   version: "2.5.3-webext.1"
 ---
 
-# web-gateway Skill
+# Web-Gateway Skill
 
 ## 工具路由优先级
 
-`web-gateway` 是联网总路由和兜底，不再独占所有联网任务。按下面顺序选择工具：
+`Web-Gateway` 是联网总路由和兜底，不再独占所有联网任务。按下面顺序选择工具：
 
 1. **GitHub 候选任务**：只要任务涉及 GitHub URL、仓库、工具/库/开源实现检索、issue、PR、release、comment、review、CI 或 repo triage，优先使用 Codex GitHub 插件；插件不覆盖时按 GitHub skill 用 `gh` / `git` 兜底。`raw.githubusercontent.com`、`githubusercontent.com` 和 `docs.github.com` 的纯文件或文档读取可直接走普通网页；如果需要回溯仓库、issue、PR 或 release，再切回 GitHub 插件。
 2. **OpenCLI 候选站点**：模型先自由判断目标是否像 OpenCLI 适配站点或结构化命令场景；疑似可覆盖时，运行 `opencli list -f json` 动态确认是否有合适 adapter。有合适命令则优先使用 OpenCLI。
 3. **Codex 自带普通检索/网页读取**：公开网页、无需登录态、无需页面交互、无需修改网页状态时，优先使用 Codex 自带的 WebSearch/WebFetch/curl/Jina 做搜索发现、页面读取、官方来源核实、新闻/资料/文档检索。
-4. **web-gateway 浏览器兜底**：前 3 类不覆盖、常规读取失败、需要登录态、动态页面、页面内交互、本地浏览器历史/书签、媒体提取、下载、视频帧采样，或需要任意 `/eval` 读写 DOM / 调用页面内部函数时，进入本 skill 的浏览器模式；优先走浏览器扩展后端，扩展不可用时进入 CDP 兜底。OpenCLI adapter 失败时，先按 OpenCLI 的 `--trace retain-on-failure` 收集证据；若不适合修 adapter，再回落到浏览器模式。
+4. **Web-Gateway 浏览器兜底**：前 3 类不覆盖、常规读取失败、需要登录态、动态页面、页面内交互、本地浏览器历史/书签、媒体提取、下载、视频帧采样，或需要任意 `/eval` 读写 DOM / 调用页面内部函数时，进入本 skill 的浏览器模式；优先走浏览器扩展后端，扩展不可用时进入 CDP 兜底。OpenCLI adapter 失败时，先按 OpenCLI 的 `--trace retain-on-failure` 收集证据；若不适合修 adapter，再回落到浏览器模式。
 
 OpenCLI 细则见 `references/opencli.md`。不要硬编码 OpenCLI 支持站点列表；registry 会更新，`opencli list -f json` 是当前真相。
 
@@ -75,7 +75,7 @@ CDP 兜底未通过时引导用户完成设置：
 | 公开网页、无需登录态、无需交互或修改页面状态；需要搜索摘要、关键词发现、官方来源核实、新闻/资料/文档检索 | **Codex 自带 WebSearch/WebFetch/curl/Jina** |
 | URL 已知，需要从页面定向提取特定信息 | **WebFetch**（拉取网页内容，由小模型根据 prompt 提取，返回处理后结果） |
 | URL 已知，需要原始 HTML 源码（meta、JSON-LD 等结构化字段） | **curl** |
-| 前 3 类不覆盖、常规读取失败、OpenCLI adapter 失败后不适合修复、非公开内容、已知静态层无效的平台、需要登录态/交互/DOM eval/本地浏览器资源/媒体提取 | **web-gateway 浏览器模式**（扩展后端优先；失败三次后进入 CDP 兜底） |
+| 前 3 类不覆盖、常规读取失败、OpenCLI adapter 失败后不适合修复、非公开内容、已知静态层无效的平台、需要登录态/交互/DOM eval/本地浏览器资源/媒体提取 | **Web-Gateway 浏览器模式**（扩展后端优先；失败三次后进入 CDP 兜底） |
 
 浏览器模式不要求 URL 已知——可从任意入口出发，通过页面内搜索、点击、跳转等方式找到目标内容。WebSearch、WebFetch、curl 均不处理登录态。
 

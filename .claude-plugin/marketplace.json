@@ -4,12 +4,12 @@
     "name": "一泽 Eze"
   },
   "metadata": {
-    "description": "Unified web gateway skill for Claude Code"
+    "description": "Web-Gateway skill for Claude Code"
   },
   "plugins": [
     {
       "name": "web-gateway",
-      "description": "All web operations through one gateway: search, fetch, browser automation, site experience accumulation",
+      "description": "Web-Gateway routes web tasks across search, fetch, OpenCLI, and browser automation backends",
       "source": "./",
       "category": "productivity",
       "tags": ["web", "gateway", "browser", "cdp", "automation", "search"]

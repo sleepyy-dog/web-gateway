@@ -3,9 +3,9 @@ chrome.runtime.sendMessage({ type: 'status' }, (status) => {
   const label = document.getElementById('status');
   if (status?.connected) {
     dot.classList.add('connected');
-    label.textContent = 'Connected to local web-gateway proxy';
+    label.textContent = 'Connected to local Web-Gateway proxy';
   } else {
     dot.classList.remove('connected');
-    label.textContent = 'Waiting for local web-gateway proxy';
+    label.textContent = 'Waiting for local Web-Gateway proxy';
   }
 });

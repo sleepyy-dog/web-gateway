@@ -19,7 +19,28 @@
 
 ## 使用方式
 
-1. 安装 `Web-Gateway` skill。
-2. 安装并启用 `extension/` 浏览器插件。
-3. 运行 `scripts/check-webext.mjs` 检查扩展后端连接状态。
-4. 让 Agent 执行一次网页读取或页面交互任务，确认路由和浏览器后端工作正常。
+### 1. 安装 Skill
+
+将仓库克隆或复制到 Agent 的 skill 目录。目录名建议保持为 `web-gateway`，这是当前 skill 的技术 ID。
+
+```powershell
+git clone https://github.com/sleepyy-dog/web-gateway "$HOME\.agents\skills\web-gateway"
+```
+
+### 2. 安装浏览器扩展
+
+打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，然后选择 **Load unpacked**，加载本仓库的 `extension/` 目录。
+
+### 3. 检查扩展后端
+
+运行检查脚本，确认本地 daemon 和浏览器扩展已经连通。
+
+```powershell
+node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
+```
+
+如果输出 `webext: ready`，说明扩展后端可用；后续浏览器自动化任务会优先使用该后端。若扩展暂未连接，等待几秒后重试；仍不可用时再检查浏览器扩展是否已启用并授权。
+
+### 4. 做一次任务验证
+
+让 Agent 执行一个需要网页读取或页面交互的任务，例如读取一个公开页面、打开需要登录态的页面，或测试一次简单的 DOM 读取。确认任务能按路由策略进入 OpenCLI、Agent 自带检索 / 网页读取，或浏览器自动化后端。
