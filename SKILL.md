@@ -24,6 +24,11 @@ OpenCLI 细则见 `references/opencli.md`。不要硬编码 OpenCLI 支持站点
 
 ## 前置检查
 
+Web-Gateway 浏览器后端和 OpenCLI Browser Bridge 是两套独立扩展：
+
+- `extension/`：Web-Gateway 自己的浏览器后端，连接 `127.0.0.1:3457`。
+- `extension/opencli/`：随本 fork vendored 的 OpenCLI Browser Bridge，用于 OpenCLI 需要浏览器桥接的 adapter。
+
 仅在需要进入本 skill 的浏览器模式前做检查。默认先检查浏览器扩展后端：
 
 ```powershell
@@ -33,7 +38,7 @@ node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
 结果处理：
 - `webext: ready`：使用 `http://127.0.0.1:3457`，后续不需要 Chrome remote-debugging 授权弹窗。
 - `extension not connected` 或其他非 ready 结果：不要立刻切到 CDP。扩展服务 worker 或本地 daemon 重启后可能需要几秒重连；等待 10 秒后重跑 `check-webext.mjs`，最多重试两次，也就是总共检查三次。
-- 三次检查后仍非 ready：如果用户确认扩展尚未安装或未授权，再引导用户打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，Load unpacked 选择本 skill 的 `extension/` 目录，然后重跑 `check-webext.mjs`。安装并授权扩展后，后续正常使用无需再去浏览器点运行权限。
+- 三次检查后仍非 ready：如果用户确认扩展尚未安装或未授权，再引导用户打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，Load unpacked 选择本 skill 的 `extension/` 目录，然后重跑 `check-webext.mjs`。如任务同时需要 OpenCLI Browser Bridge，再额外 Load unpacked 选择 `extension/opencli/` 并运行 `opencli doctor`。安装并授权扩展后，后续正常使用无需再去浏览器点运行权限。
 - 只有扩展后端三次检查失败、目标页无法 attach，或确实需要扩展后端未覆盖的底层 CDP 方法时，才进入 CDP 兜底：
 
 ```powershell
@@ -115,7 +120,7 @@ node "$HOME\.agents\skills\web-gateway\scripts\find-url.mjs" [关键词...] [--o
 浏览器模式直连用户日常 Chrome / Edge，天然携带登录态，无需启动独立浏览器。
 若无用户明确要求，不主动操作用户已有 tab，所有操作都在自己创建的后台 tab 中进行，保持对用户环境的最小侵入。不关闭用户 tab 的前提下，完成任务后关闭自己创建的 tab，保持环境整洁。
 
-默认使用浏览器扩展后端：它和 OpenCLI Browser Bridge 类似，由本地 daemon 暴露 HTTP API，再由已安装的扩展通过 `chrome.debugger` / `chrome.tabs` 操作浏览器。一次性安装并授权扩展后，日常使用不再依赖 `chrome://inspect/#remote-debugging` 的运行权限弹窗。
+默认使用浏览器扩展后端：它和 OpenCLI Browser Bridge 架构类似，由本地 daemon 暴露 HTTP API，再由已安装的扩展通过 `chrome.debugger` / `chrome.tabs` 操作浏览器。二者不是同一个扩展；本 skill 的扩展在 `extension/`，OpenCLI Browser Bridge 在 `extension/opencli/`。一次性安装并授权扩展后，日常使用不再依赖 `chrome://inspect/#remote-debugging` 的运行权限弹窗。
 
 ### 扩展后端（优先）
 

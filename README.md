@@ -1,6 +1,6 @@
 # Web-Gateway
 
-如果你发现当前的 AI 联网工具不能覆盖你的检索和网页操作需求，可以看一下 `Web-Gateway`：这是一个汇总并路由现有 AI 联网工具能力的 Skill。
+如果你发现当前的 AI 联网工具不能覆盖你的检索和网页操作需求，可以看一下 `Web-Gateway`：这是一个汇总并路由现有所有 AI 联网工具能力的 Skill。
 
 `Web-Gateway` 面向 Codex / Claude Code 等 AI Agent。它会根据网页类型和任务需求（例如是否需要浏览器登录态、是否需要页面交互），在 OpenCLI、Agent 自带检索 / 网页读取，以及 Web Access 这三类能力之间选择合适路径。
 
@@ -15,7 +15,7 @@
 
 `Web-Gateway` 的核心目标是把这些能力组合起来，基于不同任务做路由：OpenCLI 能覆盖的特定站点优先使用 OpenCLI；公开网页、无需登录态和交互时优先使用 Agent 自带检索 / 网页读取；需要登录态、动态页面、DOM 读取、表单填写、文件上传、视频帧采样等能力时，再使用 Web Access。
 
-本 fork 在 [Web Access repo](https://github.com/eze-is/web-access) 基础上，增加了浏览器扩展后端和本地路由策略。扩展后端一次安装授权后，可以减少后续任务中反复进行浏览器授权操作的成本。
+`Web-Gateway` fork 了 [Web Access repo](https://github.com/eze-is/web-access)，并增加了浏览器扩展后端和本地路由策略。扩展后端一次安装授权后，可以减少后续任务中反复进行浏览器授权操作的成本。
 
 ## 使用方式
 
@@ -29,11 +29,16 @@ git clone https://github.com/sleepyy-dog/web-gateway "$HOME\.agents\skills\web-g
 
 ### 2. 安装浏览器扩展
 
-打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，然后选择 **Load unpacked**，加载本仓库的 `extension/` 目录。
+打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，然后分别选择 **Load unpacked**：
 
-### 3. 检查扩展后端
+1. 加载 `extension/`，用于 Web-Gateway 浏览器后端；
+2. 加载 `extension/opencli/`，用于 OpenCLI Browser Bridge。
 
-运行检查脚本，确认本地 daemon 和浏览器扩展已经连通。
+这两个目录是两套独立扩展，浏览器里需要分别加载一次。
+
+### 3. 检查扩展连接
+
+运行检查脚本，确认 Web-Gateway 本地 daemon 和浏览器扩展已经连通。
 
 ```powershell
 node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
@@ -41,12 +46,24 @@ node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
 
 如果输出 `webext: ready`，说明扩展后端可用；后续浏览器自动化任务会优先使用该后端。若扩展暂未连接，等待几秒后重试；仍不可用时再检查浏览器扩展是否已启用并授权。
 
+再检查 OpenCLI Browser Bridge：
+
+```powershell
+opencli doctor
+```
+
+如果 `Extension` 和 `Connectivity` 均为 OK，说明 OpenCLI 中依赖浏览器桥接的 adapter 也可用。
+
 ### 4. 做一次任务验证
 
 提示词：
 
 ```text
-请使用 Web-Gateway 完成两个验证任务：1. 找出我最近在浏览器里访问过的小红书帖子，告诉我标题、作者和链接，并切换点赞状态：未点赞就点赞，已点赞就取消点赞。2. 打开 https://www.selenium.dev/selenium/web/web-form.html，在 Text input 填写 Web-Gateway smoke test，在 Textarea 填写 hello from Web-Gateway，不要点击 Submit，最后告诉我两个字段当前的值。
+请使用 Web-Gateway 完成两个验证任务：
+
+1. 找出我最近在浏览器里访问过的小红书帖子，告诉我标题、作者和链接，并切换点赞状态：未点赞就点赞，已点赞就取消点赞。
+
+2. 打开 https://www.selenium.dev/selenium/web/web-form.html，在 Text input 填写 Web-Gateway smoke test，在 Textarea 填写 hello from Web-Gateway，不要点击 Submit，最后告诉我两个字段当前的值。
 ```
 
 ## 借鉴

@@ -1,11 +1,14 @@
 const PROXY_HTTP = 'http://127.0.0.1:3457';
 const PROXY_WS = 'ws://127.0.0.1:3457/ext';
 const RECONNECT_ALARM = 'web-gateway-reconnect';
+const SHORT_RECONNECT_DELAYS_MS = [1000, 2000, 5000];
 const attachedTabs = new Set();
 
 let ws = null;
 let connectInFlight = false;
 let lastConnectedAt = null;
+let reconnectTimer = null;
+let reconnectAttempt = 0;
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create(RECONNECT_ALARM, { periodInMinutes: 0.5 });
@@ -18,7 +21,10 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === RECONNECT_ALARM) connect();
+  if (alarm.name === RECONNECT_ALARM) {
+    reconnectAttempt = 0;
+    connect();
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -48,8 +54,12 @@ async function connect() {
 
   try {
     const response = await fetch(`${PROXY_HTTP}/health`, { signal: AbortSignal.timeout(1000) });
-    if (!response.ok) return;
+    if (!response.ok) {
+      scheduleReconnect();
+      return;
+    }
   } catch {
+    scheduleReconnect();
     return;
   } finally {
     connectInFlight = false;
@@ -58,10 +68,13 @@ async function connect() {
   try {
     ws = new WebSocket(PROXY_WS);
   } catch {
+    scheduleReconnect();
     return;
   }
 
   ws.onopen = () => {
+    clearReconnectTimer();
+    reconnectAttempt = 0;
     lastConnectedAt = new Date().toISOString();
     safeSend({
       type: 'hello',
@@ -95,11 +108,28 @@ async function connect() {
 
   ws.onclose = () => {
     ws = null;
+    scheduleReconnect();
   };
 
   ws.onerror = () => {
     try { ws?.close(); } catch {}
   };
+}
+
+function scheduleReconnect() {
+  if (reconnectTimer || reconnectAttempt >= SHORT_RECONNECT_DELAYS_MS.length) return;
+  const delay = SHORT_RECONNECT_DELAYS_MS[reconnectAttempt];
+  reconnectAttempt += 1;
+  reconnectTimer = setTimeout(() => {
+    reconnectTimer = null;
+    connect();
+  }, delay);
+}
+
+function clearReconnectTimer() {
+  if (!reconnectTimer) return;
+  clearTimeout(reconnectTimer);
+  reconnectTimer = null;
 }
 
 function safeSend(payload) {

@@ -66,7 +66,7 @@ If `strategy` is `cookie`, `intercept`, or `ui`, check the bridge when needed:
 opencli doctor
 ```
 
-If the bridge is not connected, report the specific `doctor` issue instead of falling back blindly.
+If the bridge is not connected, report the specific `doctor` issue instead of falling back blindly. For this fork, the vendored OpenCLI Browser Bridge extension lives at `extension/opencli/`; tell the user to load that directory with `chrome://extensions` or `edge://extensions` when `doctor` reports that the extension is missing or not connected.
 
 ## Fallback rules
 

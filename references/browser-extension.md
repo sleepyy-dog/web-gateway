@@ -19,6 +19,15 @@ Chrome's `chrome://inspect/#remote-debugging` toggle.
 
 ## One-Time Setup
 
+This repository contains two independent unpacked extensions:
+
+1. `${CLAUDE_SKILL_DIR}/extension` for the Web-Gateway browser backend.
+2. `${CLAUDE_SKILL_DIR}/extension/opencli` for OpenCLI Browser Bridge.
+
+Chrome / Edge cannot load both from one `manifest.json`; load the two
+directories separately when both Web-Gateway browser fallback and OpenCLI
+browser-backed adapters are needed.
+
 Start the daemon and check extension connectivity:
 
 ```bash
@@ -38,7 +47,8 @@ load it once:
 2. Enable Developer mode.
 3. Choose "Load unpacked".
 4. Select `${CLAUDE_SKILL_DIR}/extension`.
-5. Re-run `node "${CLAUDE_SKILL_DIR}/scripts/check-webext.mjs"`.
+5. If OpenCLI Browser Bridge is also needed, choose "Load unpacked" again and select `${CLAUDE_SKILL_DIR}/extension/opencli`.
+6. Re-run `node "${CLAUDE_SKILL_DIR}/scripts/check-webext.mjs"` for Web-Gateway and `opencli doctor` for OpenCLI.
 
 After this one-time browser permission, future `web-gateway` browser operations
 can use the extension backend without the remote-debugging authorization prompt.
