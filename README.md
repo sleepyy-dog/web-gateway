@@ -13,9 +13,9 @@
 | Agent 自带检索 / 网页读取 | ✓ | ✕ | ✕ | ✕ | ✓ | ✕ | ✓ | ✕ |
 | Web-Gateway | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-`Web-Gateway` 的核心目标是把这些能力组合起来，基于不同任务做路由：OpenCLI 能覆盖的特定站点优先使用 OpenCLI；公开网页、无需登录态和交互时优先使用 Agent 自带检索 / 网页读取；需要登录态、动态页面、DOM 读取、表单填写、文件上传、视频帧采样等能力时，再使用 Web Access。
+`Web-Gateway` 的核心目标是把这些能力组合起来，基于不同任务做路由：OpenCLI 能覆盖的特定站点优先使用 OpenCLI；公开网页、无需登录态和交互时优先使用 Agent 自带检索 / 网页读取；需要登录态、动态页面、DOM 读取、表单填写、文件上传、视频帧采样等能力时，再进入统一的 CDP 模式。
 
-`Web-Gateway` fork 了 [Web Access repo](https://github.com/eze-is/web-access)，并增加了浏览器扩展后端和本地路由策略。扩展后端一次安装授权后，可以减少后续任务中反复进行浏览器授权操作的成本。
+`Web-Gateway` fork 了 [Web Access repo](https://github.com/eze-is/web-access)，并增加了 CDP extension transport 和本地路由策略。extension transport 一次安装授权后，可以通过 `chrome.debugger` 传递 CDP 命令，减少后续任务中反复进行浏览器 remote-debugging 授权操作的成本。
 
 ## 使用方式
 
@@ -27,24 +27,24 @@
 git clone https://github.com/sleepyy-dog/web-gateway "$HOME\.agents\skills\web-gateway"
 ```
 
-### 2. 安装浏览器扩展
+### 2. 安装 CDP Extension Transport
 
 打开 `chrome://extensions` 或 `edge://extensions`，启用 Developer mode，然后分别选择 **Load unpacked**：
 
-1. 加载 `extension/`，用于 Web-Gateway 浏览器后端；
+1. 加载 `extension/`，用于 Web-Gateway CDP extension transport；
 2. 加载 `extension/opencli/`，用于 OpenCLI Browser Bridge。
 
 这两个目录是两套独立扩展，浏览器里需要分别加载一次。
 
-### 3. 检查扩展连接
+### 3. 检查 CDP Extension Transport
 
-运行检查脚本，确认 Web-Gateway 本地 daemon 和浏览器扩展已经连通。
+运行检查脚本，确认 Web-Gateway 本地 daemon 和 CDP extension transport 已经连通。
 
 ```powershell
-node "$HOME\.agents\skills\web-gateway\scripts\check-webext.mjs"
+node "$HOME\.agents\skills\web-gateway\scripts\check-cdp.mjs"
 ```
 
-如果输出 `webext: ready`，说明扩展后端可用；后续浏览器自动化任务会优先使用该后端。若扩展暂未连接，等待几秒后重试；仍不可用时再检查浏览器扩展是否已启用并授权。
+如果输出 `cdp-extension: ready`，说明 extension transport 可用；后续 CDP 模式会优先使用该 transport。若扩展暂未连接，等待几秒后重试；仍不可用时再检查浏览器扩展是否已启用并授权。
 
 再检查 OpenCLI Browser Bridge：
 
@@ -70,4 +70,4 @@ opencli doctor
 
 `Web-Gateway` 借鉴了 OpenCLI 的站点 adapter 思路：对有明确平台语义的网站，优先使用结构化、定制化的读取和操作方式，而不是直接抓取完整页面。
 
-它也借鉴了 Web Access 的浏览器自动化能力，用它作为需要登录态、动态页面或页面交互任务的兜底后端；`Web-Gateway` 的重点是把这些能力组织成统一路由，而不是替代其中任何一个工具。
+它也借鉴了 Web Access 的 CDP 自动化能力，用统一 CDP 模式承接需要登录态、动态页面或页面交互的任务；`Web-Gateway` 的重点是把这些能力组织成统一路由，而不是替代其中任何一个工具。

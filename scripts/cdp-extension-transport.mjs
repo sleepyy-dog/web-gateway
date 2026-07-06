@@ -117,7 +117,7 @@ export function createHttpHandler({ bridge }) {
       if (pathname === '/health') {
         writeJson(res, {
           status: 'ok',
-          backend: 'webext',
+          backend: 'cdp-extension',
           connected: bridge.isConnected(),
           extension: bridge.extension,
         });

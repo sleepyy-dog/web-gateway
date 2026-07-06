@@ -9,7 +9,7 @@ import {
   encodeTextFrame,
   handleWebSocketUpgrade,
   WebSocketFrameReader,
-} from '../scripts/webext-proxy-lib.mjs';
+} from '../scripts/cdp-extension-transport.mjs';
 
 test('websocket frame codec round-trips masked client text frames', () => {
   const reader = new WebSocketFrameReader();

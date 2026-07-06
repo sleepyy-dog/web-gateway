@@ -1,5 +1,5 @@
-const PROXY_HTTP = 'http://127.0.0.1:3457';
-const PROXY_WS = 'ws://127.0.0.1:3457/ext';
+const PROXY_HTTP = 'http://127.0.0.1:3456';
+const PROXY_WS = 'ws://127.0.0.1:3456/ext';
 const RECONNECT_ALARM = 'web-gateway-reconnect';
 const SHORT_RECONNECT_DELAYS_MS = [1000, 2000, 5000];
 const attachedTabs = new Set();
