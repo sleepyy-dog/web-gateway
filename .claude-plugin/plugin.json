@@ -1,13 +1,13 @@
 {
   "name": "web-gateway",
-  "description": "Web-Gateway skill for Claude Code - intelligent tool routing, browser automation, and site experience accumulation",
-  "version": "2.5.3-webext.1",
+  "description": "Web-Gateway skill for Claude Code - routes web tasks across GitHub, OpenCLI, web-access, and native web tools",
+  "version": "2.6.0-routing.1",
   "author": {
     "name": "一泽 Eze"
   },
   "homepage": "https://github.com/sleepyy-dog/web-gateway",
   "repository": "https://github.com/sleepyy-dog/web-gateway",
   "license": "MIT",
-  "keywords": ["web", "gateway", "browser", "cdp", "automation", "search"],
+  "keywords": ["web", "gateway", "opencli", "web-access", "search"],
   "skills": "./"
 }

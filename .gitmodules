@@ -1,0 +1,7 @@
+[submodule "opencli"]
+	path = opencli
+	url = https://github.com/jackwener/OpenCLI.git
+[submodule "web-access"]
+	path = web-access
+	url = https://github.com/sleepyy-dog/web-access.git
+	branch = codex/cdp-extension-transport

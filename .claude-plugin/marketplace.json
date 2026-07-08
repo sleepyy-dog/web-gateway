@@ -9,10 +9,10 @@
   "plugins": [
     {
       "name": "web-gateway",
-      "description": "Web-Gateway routes web tasks across search, fetch, OpenCLI, and browser automation backends",
+      "description": "Web-Gateway routes web tasks across GitHub, OpenCLI, web-access, and native web tools",
       "source": "./",
       "category": "productivity",
-      "tags": ["web", "gateway", "browser", "cdp", "automation", "search"]
+      "tags": ["web", "gateway", "opencli", "web-access", "search"]
     }
   ]
 }
